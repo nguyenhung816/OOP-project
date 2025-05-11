@@ -18,7 +18,6 @@ public class HowToPlay {
         };
         panel.setLayout(null); 
 
-        // Title Label
         JLabel title = new JLabel("How To Play");
         title.setFont(new Font("Snap ITC", Font.BOLD, 30)); 
         title.setForeground(Color.BLUE); 
@@ -26,7 +25,6 @@ public class HowToPlay {
         title.setHorizontalAlignment(SwingConstants.CENTER); 
         panel.add(title);
 
-        // Instructions Label
         JLabel instructions = new JLabel("<html><div style='text-align: center;'>"
                 + "<b>1. Press Play to start the game.<b><br>"
                 + "2. Memorize the positions of the cards.<br>"
@@ -40,13 +38,9 @@ public class HowToPlay {
         instructions.setHorizontalAlignment(SwingConstants.CENTER); 
         panel.add(instructions);
 
-        // Add panel to the frame
         frame.add(panel);
 
-        // Center the frame on the screen
         frame.setLocationRelativeTo(null);
-
-        // Make the frame visible
         frame.setVisible(true);
     }
 
