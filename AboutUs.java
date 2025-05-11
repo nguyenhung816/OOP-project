@@ -18,7 +18,6 @@ public class AboutUs {
         };
         panel.setLayout(null);
 
-        // Title Label
         JLabel title = new JLabel("Meet the Developers");
         title.setFont(new Font("Snap ITC", Font.BOLD, 40)); 
         title.setForeground(Color.BLUE); 
@@ -26,13 +25,11 @@ public class AboutUs {
         title.setHorizontalAlignment(SwingConstants.CENTER);
         panel.add(title);
 
-        // Developer names
         JLabel dev1 = new JLabel("1. Nguyễn Nhật Anh Huy - ITITWE23031");
         JLabel dev2 = new JLabel("2. Nguyễn Lê Ngọc Trân - ITDSIU23024");
         JLabel dev3 = new JLabel("3. Nguyễn Triều Hưng - ITCSIU24031");
         JLabel dev4 = new JLabel("4. Phan Thị Kim Ngân - ITCSIU24060");
 
-        // Set fonts and colors
         Font devFont = new Font("Times New Roman", Font.PLAIN, 30);
         Color devColor = Color.BLACK;
 
@@ -52,13 +49,11 @@ public class AboutUs {
         dev4.setForeground(devColor);
         dev4.setBounds(25, 220, 600, 40);
 
-        // Add names to the panel
         panel.add(dev1);
         panel.add(dev2);
         panel.add(dev3);
         panel.add(dev4);
 
-        // Close Button
         JButton closeButton = new JButton("Close");
         closeButton.setBounds(250, 300, 100, 30);
         closeButton.setFont(new Font("Arial", Font.BOLD, 15));
