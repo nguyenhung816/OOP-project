@@ -58,20 +58,17 @@ public class MainMenu {
         JButton quitButton = new JButton("Quit", new ImageIcon("src/Images for buttons/Quit.jpg"));
         
         //load and scale icon
-        //ImageIcon settingIcon = new ImageIcon(MainMenu.class.getResource("src/Icons/setting_icon.png"));
         ImageIcon shareIcon = new ImageIcon(MainMenu.class.getResource("src/Icons/share_icon.png"));
         ImageIcon aboutUsIcon = new ImageIcon(MainMenu.class.getResource("src/Icons/aboutus_icon.png"));
         ImageIcon shoppingIcon = new ImageIcon(MainMenu.class.getResource("src/Icons/shopping_icon.png"));
 
         //resize icon to 65x65
         int iconSize = 65;
-        //settingIcon = new ImageIcon(settingIcon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH));
         shareIcon = new ImageIcon(shareIcon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH));
         aboutUsIcon = new ImageIcon(aboutUsIcon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH));
         shoppingIcon = new ImageIcon(shoppingIcon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH));
         
         //create buttons
-        //JButton settingButton = new JButton(settingIcon);
         JButton shareButton = new JButton(shareIcon);
         JButton aboutUsButton = new JButton(aboutUsIcon);
         JButton shoppingButton = new JButton(shoppingIcon);
@@ -96,7 +93,6 @@ public class MainMenu {
         collectionButton.setBounds(250, 400, 275, 55);
         quitButton.setBounds(250, 500, 275, 55);
 
-        //settingButton.setBounds(20, 620, 70, 70); 
         shareButton.setBounds(120, 620, 70, 70);
         shoppingButton.setBounds(220, 620, 70, 70); 
         aboutUsButton.setBounds(700, 620, 70, 70); 
@@ -125,7 +121,6 @@ public class MainMenu {
         panel.add(howToPlayButton);
         panel.add(collectionButton);
         panel.add(quitButton);
-        //panel.add(settingButton);
         panel.add(shareButton);
         panel.add(aboutUsButton);
         panel.add(shoppingButton);
@@ -151,13 +146,6 @@ public class MainMenu {
                 new HowToPlay();
             }
         });
-        /*settingButton.addActionListener(e -> Setting.showSettings());
-        settingButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new Setting();
-            }
-        });*/
 
         shareButton.addActionListener(e -> Share.showShareMenu());
         shareButton.addActionListener(new ActionListener() {

@@ -80,31 +80,11 @@ public class MatchCards {
         JLabel retriesLabel = new JLabel("Retries: " + Integer.toString(retries)); // NEW
         retriesLabel.setFont(new Font("Arial", Font.PLAIN, 20));
         retriesLabel.setHorizontalAlignment(JLabel.CENTER);
-        
         textPanel.setPreferredSize(new Dimension(boardWidth/2, 60));
-
         textPanel.add(livesLabel);
         textPanel.add(retriesLabel);
-
         frame.add(textPanel, BorderLayout.EAST);
-
-        /*
-        restartButton.setFont(new Font("Arial", Font.PLAIN, 16));
-        restartButton.setText("Restart Game");
-        restartButton.setPreferredSize(new Dimension(boardWidth, 30));
-        restartButton.setFocusable(false);
-        restartButton.setEnabled(false); 
-
-        restartGamePanel.add(restartButton);
-        frame.add(restartGamePanel, BorderLayout.SOUTH);
-
-        frame.pack();
-        frame.setVisible(true);
-        */
-
-        //textPanel.setPreferredSize(new Dimension(boardWidth/2, 30));
         textPanel.add(textLabel);
-        //frame.add(textPanel, BorderLayout.EAST);
 
         //card game board
         board = new ArrayList<JButton>();
