@@ -7,7 +7,7 @@ import java.io.IOException;
 public class Setting {
     private static Clip musicClip;
     private static float musicVolume = 0.5f; // Default music volume (50%)
-    private static float soundVolume = 0.5f; 
+    private static float soundVolume = 0.5f; // Default sound volume (50%)
 
     public static void showSettings() {
         JFrame frame = new JFrame("Settings");
@@ -18,7 +18,7 @@ public class Setting {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                ImageIcon background = new ImageIcon("src/Background game/HowtoPlay.jpg"); 
+                ImageIcon background = new ImageIcon("src/Background game/HowtoPlay.jpg"); // Replace with your image path
                 g.drawImage(background.getImage(), 0, 0, getWidth(), getHeight(), this);
             }
         };
@@ -30,6 +30,7 @@ public class Setting {
         title.setBounds(150, 20, 200, 40);
         panel.add(title);
 
+        // Music Volume Slider
         JLabel musicLabel = new JLabel("Music Volume:");
         musicLabel.setFont(new Font("Times New Roman", Font.BOLD, 25));
         musicLabel.setForeground(Color.BLACK);
@@ -41,6 +42,7 @@ public class Setting {
         musicSlider.addChangeListener(e -> adjustMusicVolume(musicSlider.getValue() / 100f));
         panel.add(musicSlider);
 
+        // Sound Volume Slider
         JLabel soundLabel = new JLabel("Sound Volume:");
         soundLabel.setFont(new Font("Times New Roman", Font.BOLD, 25));
         soundLabel.setForeground(Color.BLACK);
@@ -52,6 +54,7 @@ public class Setting {
         soundSlider.addChangeListener(e -> adjustSoundVolume(soundSlider.getValue() / 100f));
         panel.add(soundSlider);
 
+        // Mute/Unmute Button
         JButton muteButton = new JButton("Mute");
         muteButton.setBounds(190, 225, 80, 30);
         muteButton.addActionListener(e -> {
@@ -72,6 +75,7 @@ public class Setting {
         frame.setVisible(true);
     }
 
+    // Method to adjust music volume
     private static void adjustMusicVolume(float volume) {
         musicVolume = volume;
         if (musicClip != null) {
@@ -80,18 +84,21 @@ public class Setting {
         }
     }
 
+    // Method to adjust sound volume (to be used for sound effects)
     private static void adjustSoundVolume(float volume) {
         soundVolume = volume;
+        // Example: This can be applied to individual sound effect clips
     }
 
+    // Method to play background music
     public static void playMusic(String filePath) {
         try {
             File musicFile = new File(filePath);
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(musicFile);
             musicClip = AudioSystem.getClip();
             musicClip.open(audioStream);
-            adjustMusicVolume(musicVolume); 
-            musicClip.loop(Clip.LOOP_CONTINUOUSLY);
+            adjustMusicVolume(musicVolume); // Set initial volume
+            musicClip.loop(Clip.LOOP_CONTINUOUSLY); // Loop the music
             musicClip.start();
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
