@@ -14,7 +14,7 @@ public class MainMenu {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                ImageIcon background = new ImageIcon("src/Image for background/background.png"); /
+                ImageIcon background = new ImageIcon("src/Image for background/background.png");
                 g.drawImage(background.getImage(), 0, 0, getWidth(), getHeight(), this);
 
                 g.setFont(new Font("Snap ITC", Font.BOLD, 80));
