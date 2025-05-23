@@ -34,7 +34,7 @@ public class MainMenu {
         frame.setSize(1440, 800);
         frame.setResizable(false);
         
-        playMusic("src/theme_song/game_theme.wav");
+        playMusic("srcs/theme_song/game_theme.wav");
 
         
 
@@ -42,7 +42,7 @@ public class MainMenu {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                ImageIcon background = new ImageIcon("src/Image for background/background.png");
+                ImageIcon background = new ImageIcon("srcs/Image for background/background.png");
                 g.drawImage(background.getImage(), 0, 0, getWidth(), getHeight(), this);
 
                 g.setFont(new Font("Snap ITC", Font.BOLD, 80));
@@ -52,16 +52,16 @@ public class MainMenu {
         };
         panel.setLayout(null);
 
-        JButton playButton = new JButton("Play", new ImageIcon("src/Screenshot 2025-05-11 163826.png")); 
-        JButton howToPlayButton = new JButton("How To Play", new ImageIcon("src/Images for buttons/How to Play.jpg")); 
-        JButton collectionButton = new JButton("Collection", new ImageIcon("src/Images for buttons/Collection.jpg")); 
-        JButton quitButton = new JButton("Quit", new ImageIcon("src/Images for buttons/Quit.jpg"));
+        JButton playButton = new JButton("Play", new ImageIcon("srcs/Screenshot 2025-05-11 163826.png")); 
+        JButton howToPlayButton = new JButton("How To Play", new ImageIcon("srcs/Images for buttons/How to Play.jpg")); 
+        JButton collectionButton = new JButton("Collection", new ImageIcon("srcs/Images for buttons/Collection.jpg")); 
+        JButton quitButton = new JButton("Quit", new ImageIcon("srcs/Images for buttons/Quit.jpg"));
         
         //load and scale icon
-        //ImageIcon settingIcon = new ImageIcon(MainMenu.class.getResource("src/Icons/setting_icon.png"));
-        ImageIcon shareIcon = new ImageIcon(MainMenu.class.getResource("src/Icons/share_icon.png"));
-        ImageIcon aboutUsIcon = new ImageIcon(MainMenu.class.getResource("src/Icons/aboutus_icon.png"));
-        ImageIcon shoppingIcon = new ImageIcon(MainMenu.class.getResource("src/Icons/shopping_icon.png"));
+        //ImageIcon settingIcon = new ImageIcon(MainMenu.class.getResource("srcs/Icons/setting_icon.png"));
+        ImageIcon shareIcon = new ImageIcon(MainMenu.class.getResource("srcs/Icons/share_icon.png"));
+        ImageIcon aboutUsIcon = new ImageIcon(MainMenu.class.getResource("srcs/Icons/aboutus_icon.png"));
+        ImageIcon shoppingIcon = new ImageIcon(MainMenu.class.getResource("srcs/Icons/shopping_icon.png"));
 
         //resize icon to 65x65
         int iconSize = 65;
@@ -181,3 +181,4 @@ public class MainMenu {
         
     }
 }
+//

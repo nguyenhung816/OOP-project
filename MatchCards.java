@@ -221,7 +221,7 @@ public class MatchCards {
         cardSet = new ArrayList<Card>();
         for (String cardName : cardList) {
             //load each card image
-            Image cardImg = new ImageIcon(getClass().getResource("src/img/" + cardName + ".jpg")).getImage();
+            Image cardImg = new ImageIcon(getClass().getResource("srcs/img/" + cardName + ".jpg")).getImage();
             ImageIcon cardImageIcon = new ImageIcon(cardImg.getScaledInstance(cardWidth, cardHeight, java.awt.Image.SCALE_SMOOTH));
 
             //create card object and add to cardSet
@@ -231,7 +231,7 @@ public class MatchCards {
         cardSet.addAll(cardSet);
 
         //load the back card image
-        Image cardBackImg = new ImageIcon(getClass().getResource("src/img/back.jpg")).getImage();
+        Image cardBackImg = new ImageIcon(getClass().getResource("srcs/img/back.jpg")).getImage();
         cardBackImageIcon = new ImageIcon(cardBackImg.getScaledInstance(cardWidth, cardHeight, java.awt.Image.SCALE_SMOOTH));
     }
 
@@ -264,3 +264,4 @@ public class MatchCards {
         }
     }
 }
+//
