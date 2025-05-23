@@ -80,14 +80,14 @@ public class Shopping {
     private static void revealAllCards(JButton[][] cardButtons, int rows, int cols) {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                cardButtons[i][j].setIcon(new ImageIcon("path_to_card_front_image")); // Replace with your card front image
+                cardButtons[i][j].setIcon(new ImageIcon("path_to_card_front_image")); 
             }
         }
 
         Timer timer = new Timer(3000, e -> {
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < cols; j++) {
-                    cardButtons[i][j].setIcon(new ImageIcon("path_to_card_back_image")); // Replace with your card back image
+                    cardButtons[i][j].setIcon(new ImageIcon("path_to_card_back_image")); 
                 }
             }
         });
@@ -106,7 +106,7 @@ public class Shopping {
             }
         }
 
-        int[] movesLeftWrapper = {10}; // Wrapper for moves left to allow modification
+        int[] movesLeftWrapper = {10}; 
         showShop(cardButtons, rows, cols, movesLeftWrapper);
     }
 }
