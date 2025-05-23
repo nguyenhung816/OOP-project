@@ -1,48 +1,20 @@
-import javax.imageio.ImageIO;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 
 public class MainMenu {
-
-    private static Clip musicClip;
-    private static float musicVolume = 0.5f; // Default music volume (50%)
-    private static float soundVolume = 0.5f; 
-    public static void playMusic(String filePath) {
-        try {
-            File musicFile = new File(filePath);
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(musicFile);
-            musicClip = AudioSystem.getClip();
-            musicClip.open(audioStream);
-            musicClip.loop(Clip.LOOP_CONTINUOUSLY);
-            musicClip.start();
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
-        }
-    } 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Memory Game");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1440, 800);
+        frame.setSize(10000, 10000);
         frame.setResizable(false);
-        
-        playMusic("src/theme_song/game_theme.wav");
-
-        
 
         JPanel panel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                ImageIcon background = new ImageIcon("src/Image for background/background.png");
+                ImageIcon background = new ImageIcon("src/Image for background/background.png"); /
                 g.drawImage(background.getImage(), 0, 0, getWidth(), getHeight(), this);
 
                 g.setFont(new Font("Snap ITC", Font.BOLD, 80));
@@ -55,48 +27,18 @@ public class MainMenu {
         JButton playButton = new JButton("Play", new ImageIcon("src/Screenshot 2025-05-11 163826.png")); 
         JButton howToPlayButton = new JButton("How To Play", new ImageIcon("src/Images for buttons/How to Play.jpg")); 
         JButton collectionButton = new JButton("Collection", new ImageIcon("src/Images for buttons/Collection.jpg")); 
-        JButton quitButton = new JButton("Quit", new ImageIcon("src/Images for buttons/Quit.jpg"));
-        
-        //load and scale icon
-        //ImageIcon settingIcon = new ImageIcon(MainMenu.class.getResource("src/Icons/setting_icon.png"));
-        ImageIcon shareIcon = new ImageIcon(MainMenu.class.getResource("src/Icons/share_icon.png"));
-        ImageIcon aboutUsIcon = new ImageIcon(MainMenu.class.getResource("src/Icons/aboutus_icon.png"));
-        ImageIcon shoppingIcon = new ImageIcon(MainMenu.class.getResource("src/Icons/shopping_icon.png"));
-
-        //resize icon to 65x65
-        int iconSize = 65;
-        //settingIcon = new ImageIcon(settingIcon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH));
-        shareIcon = new ImageIcon(shareIcon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH));
-        aboutUsIcon = new ImageIcon(aboutUsIcon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH));
-        shoppingIcon = new ImageIcon(shoppingIcon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH));
-        
-        //create buttons
-        //JButton settingButton = new JButton(settingIcon);
-        JButton shareButton = new JButton(shareIcon);
-        JButton aboutUsButton = new JButton(aboutUsIcon);
-        JButton shoppingButton = new JButton(shoppingIcon);
-        
-        //mute button
-        JButton muteButton = new JButton("Mute");
-        muteButton.setBounds(20, 620, 70, 70);
-        muteButton.addActionListener(e -> {
-            if (musicClip != null && musicClip.isRunning()) {
-                musicClip.stop();
-                muteButton.setText("Unmute");
-            } else {
-                if (musicClip != null) {
-                    musicClip.start();
-                    muteButton.setText("Mute");
-                }
-            }
-        });
+        JButton quitButton = new JButton("Quit", new ImageIcon("src/Images for buttons/Quit.jpg")); 
+        JButton settingButton = new JButton(new ImageIcon("setting_icon.png")); 
+        JButton shareButton = new JButton(new ImageIcon("share_icon.png")); 
+        JButton aboutUsButton = new JButton(new ImageIcon("about_us_icon.png")); 
+        JButton shoppingButton = new JButton(new ImageIcon("shopping_icon.png"));
         
         playButton.setBounds(250, 200, 275, 55);
         howToPlayButton.setBounds(250, 300, 275, 55);
         collectionButton.setBounds(250, 400, 275, 55);
         quitButton.setBounds(250, 500, 275, 55);
 
-        //settingButton.setBounds(20, 620, 70, 70); 
+        settingButton.setBounds(20, 620, 70, 70); 
         shareButton.setBounds(120, 620, 70, 70);
         shoppingButton.setBounds(220, 620, 70, 70); 
         aboutUsButton.setBounds(700, 620, 70, 70); 
@@ -125,24 +67,19 @@ public class MainMenu {
         panel.add(howToPlayButton);
         panel.add(collectionButton);
         panel.add(quitButton);
-        //panel.add(settingButton);
+        panel.add(settingButton);
         panel.add(shareButton);
         panel.add(aboutUsButton);
         panel.add(shoppingButton);
-        panel.add(muteButton);
 
         howToPlayButton.addActionListener(e -> HowToPlay.showHowToPlay());
 
-        playButton.addActionListener(e -> {
-            if (musicClip != null && musicClip.isRunning()) {
-                musicClip.stop();
+        playButton.addActionListener(e -> Play.startGame());
+        playButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new Play();
             }
-            frame.dispose();
-
-            //Launch the game
-            SwingUtilities.invokeLater(() -> {
-                new MatchCards();
-            });
         });
 
         howToPlayButton.addActionListener(new ActionListener() {
@@ -151,14 +88,13 @@ public class MainMenu {
                 new HowToPlay();
             }
         });
-        /*settingButton.addActionListener(e -> Setting.showSettings());
+         settingButton.addActionListener(e -> Setting.showSettings());
         settingButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new Setting();
             }
-        });*/
-
+        });
         shareButton.addActionListener(e -> Share.showShareMenu());
         shareButton.addActionListener(new ActionListener() {
             @Override
@@ -166,7 +102,6 @@ public class MainMenu {
                 new Share();
             }
         });
-
         aboutUsButton.addActionListener(e -> AboutUs.showAboutUs());
         aboutUsButton.addActionListener(new ActionListener() {
             @Override
@@ -178,6 +113,5 @@ public class MainMenu {
 
         frame.add(panel);
         frame.setVisible(true);
-        
     }
 }

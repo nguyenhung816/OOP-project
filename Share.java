@@ -27,36 +27,26 @@ public class Share {
         title.setBounds(30, 20, 400, 40);
         panel.add(title);
 
-        int iconSize = 55;
-
         // Facebook Button
-        ImageIcon facebookIcon = new ImageIcon(MainMenu.class.getResource("src/Icons/facebook_icon.png"));
-        facebookIcon = new ImageIcon(facebookIcon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH));
-        JButton facebookButton = new JButton(facebookIcon); 
+        JButton facebookButton = new JButton(new ImageIcon("src/Icons/facebook_icon.png")); 
         facebookButton.setBounds(50, 80, 60, 60);
         facebookButton.addActionListener(e -> openURL("https://www.facebook.com/sharer/sharer.php?u=https://example.com"));
         panel.add(facebookButton);
 
         // X (Twitter) Button
-        ImageIcon twitterIcon = new ImageIcon(MainMenu.class.getResource("src/Icons/xtwitter_icon.png"));
-        twitterIcon = new ImageIcon(twitterIcon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH));
-        JButton twitterButton = new JButton(twitterIcon);
+        JButton twitterButton = new JButton(new ImageIcon("src/Icons/twitter_icon.png"));
         twitterButton.setBounds(150, 80, 60, 60);
         twitterButton.addActionListener(e -> openURL("https://twitter.com/intent/tweet?url=https://example.com&text=Check this out!"));
         panel.add(twitterButton);
 
         // Snapchat Button
-        ImageIcon snapchatIcon = new ImageIcon(MainMenu.class.getResource("src/Icons/snapchat_icon.png"));
-        snapchatIcon = new ImageIcon(snapchatIcon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH));
-        JButton snapchatButton = new JButton(snapchatIcon); 
+        JButton snapchatButton = new JButton(new ImageIcon("src/Icons/snapchat_icon.png")); 
         snapchatButton.setBounds(250, 80, 60, 60);
         snapchatButton.addActionListener(e -> openURL("https://www.snapchat.com/share?u=https://example.com"));
         panel.add(snapchatButton);
 
         // WhatsApp Button
-        ImageIcon whatsappIcon = new ImageIcon(MainMenu.class.getResource("src/Icons/whatsapp_icon.png"));
-        whatsappIcon = new ImageIcon(whatsappIcon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH));
-        JButton whatsappButton = new JButton(whatsappIcon); 
+        JButton whatsappButton = new JButton(new ImageIcon("src/Icons/whatsapp_icon.png")); 
         whatsappButton.setBounds(50, 160, 60, 60);
         whatsappButton.addActionListener(e -> openURL("https://api.whatsapp.com/send?text=Check%20this%20out!%20https://example.com"));
         panel.add(whatsappButton);
