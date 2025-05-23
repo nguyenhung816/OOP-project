@@ -56,7 +56,7 @@ public class Play {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 int cardValue = cardValues.remove(0);
-                JButton cardButton = new JButton(new ImageIcon("src/card_back.jpg")); 
+                JButton cardButton = new JButton(new ImageIcon("src/card_back.jpg")); // Replace with your card back image path
                 cardButton.setFont(new Font("Arial", Font.BOLD, 20));
                 cardButton.addActionListener(new CardFlipAction(cardButton, cardValue, i, j, cardButtons, totalPairs, rows, cols));
                 cardButtons[i][j] = cardButton;
@@ -64,6 +64,7 @@ public class Play {
             }
         }
 
+        // Reveal all cards for 3 seconds
         revealAllCards(cardButtons, cardValues, rows, cols);
 
         frame.setLocationRelativeTo(null);
@@ -73,7 +74,7 @@ public class Play {
     private static void revealAllCards(JButton[][] cardButtons, ArrayList<Integer> cardValues, int rows, int cols) {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                cardButtons[i][j].setIcon(new ImageIcon("src/card_front_" + (cardValues.get(i * cols + j)) + ".jpg")); 
+                cardButtons[i][j].setIcon(new ImageIcon("src/card_front_" + (cardValues.get(i * cols + j)) + ".jpg")); // Replace with card front images
             }
         }
 
@@ -136,7 +137,7 @@ public class Play {
         public void actionPerformed(ActionEvent e) {
             if (revealedCards[row][col] || firstButton == button) return;
 
-            button.setIcon(new ImageIcon("src/card_front_" + cardValue + ".jpg"));
+            button.setIcon(new ImageIcon("src/card_front_" + cardValue + ".jpg")); // Replace with your card front image path
 
             if (firstButton == null) {
                 firstButton = button;
