@@ -15,7 +15,7 @@ public class Share {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                ImageIcon background = new ImageIcon("src/Background game/Background.jpg"); 
+                ImageIcon background = new ImageIcon("src/Background game/Background.jpg"); // Replace with your image path
                 g.drawImage(background.getImage(), 0, 0, getWidth(), getHeight(), this);
             }
         };
@@ -28,30 +28,30 @@ public class Share {
         panel.add(title);
 
         // Facebook Button
-        JButton facebookButton = new JButton(new ImageIcon("src/Icons/facebook_icon.png")); 
+        JButton facebookButton = new JButton(new ImageIcon("src/Icons/facebook_icon.png")); // Replace with your icon path
         facebookButton.setBounds(50, 80, 60, 60);
         facebookButton.addActionListener(e -> openURL("https://www.facebook.com/sharer/sharer.php?u=https://example.com"));
         panel.add(facebookButton);
 
         // X (Twitter) Button
-        JButton twitterButton = new JButton(new ImageIcon("src/Icons/twitter_icon.png"));
+        JButton twitterButton = new JButton(new ImageIcon("src/Icons/twitter_icon.png")); // Replace with your icon path
         twitterButton.setBounds(150, 80, 60, 60);
         twitterButton.addActionListener(e -> openURL("https://twitter.com/intent/tweet?url=https://example.com&text=Check this out!"));
         panel.add(twitterButton);
 
         // Snapchat Button
-        JButton snapchatButton = new JButton(new ImageIcon("src/Icons/snapchat_icon.png")); 
+        JButton snapchatButton = new JButton(new ImageIcon("src/Icons/snapchat_icon.png")); // Replace with your icon path
         snapchatButton.setBounds(250, 80, 60, 60);
         snapchatButton.addActionListener(e -> openURL("https://www.snapchat.com/share?u=https://example.com"));
         panel.add(snapchatButton);
 
         // WhatsApp Button
-        JButton whatsappButton = new JButton(new ImageIcon("src/Icons/whatsapp_icon.png")); 
+        JButton whatsappButton = new JButton(new ImageIcon("src/Icons/whatsapp_icon.png")); // Replace with your icon path
         whatsappButton.setBounds(50, 160, 60, 60);
         whatsappButton.addActionListener(e -> openURL("https://api.whatsapp.com/send?text=Check%20this%20out!%20https://example.com"));
         panel.add(whatsappButton);
 
-        // Other platforms can be added similarly
+        // Other platforms can be added similarly...
 
         frame.add(panel);
         frame.setLocationRelativeTo(null);
