@@ -1,21 +1,11 @@
-import javax.imageio.ImageIO;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
+import javax.sound.sampled.*;
+import javax.swing.*;
 
 public class MainMenu {
-
     private static Clip musicClip;
-    private static float musicVolume = 0.5f; // Default music volume (50%)
-    private static float soundVolume = 0.5f; 
+
     public static void playMusic(String filePath) {
         try {
             File musicFile = new File(filePath);
@@ -24,160 +14,111 @@ public class MainMenu {
             musicClip.open(audioStream);
             musicClip.loop(Clip.LOOP_CONTINUOUSLY);
             musicClip.start();
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-    } 
+    }
+
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Memory Game");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1440, 800);
-        frame.setResizable(false);
-        
-        playMusic("src/theme_song/game_theme.wav");
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Memory Game");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        
+            // Kích thước theo 70% màn hình
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            int width = (int) (screenSize.width * 0.7);
+            int height = (int) (screenSize.height * 0.7);
+            frame.setSize(width, height);
+            frame.setLocationRelativeTo(null);
+            frame.setLayout(new BorderLayout());
 
-        JPanel panel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                ImageIcon background = new ImageIcon("src/Image for background/background.png");
-                g.drawImage(background.getImage(), 0, 0, getWidth(), getHeight(), this);
+            playMusic("src/theme_song/game_theme.wav");
 
-                g.setFont(new Font("Snap ITC", Font.BOLD, 80));
-                g.setColor(Color.BLACK);
-                g.drawString("Memory Game", getWidth() / 2-580, 125);
-            }
-        };
-        panel.setLayout(null);
-
-        JButton playButton = new JButton("Play", new ImageIcon("src/Screenshot 2025-05-11 163826.png")); 
-        JButton howToPlayButton = new JButton("How To Play", new ImageIcon("src/Images for buttons/How to Play.jpg")); 
-        JButton collectionButton = new JButton("Collection", new ImageIcon("src/Images for buttons/Collection.jpg")); 
-        JButton quitButton = new JButton("Quit", new ImageIcon("src/Images for buttons/Quit.jpg"));
-        
-        //load and scale icon
-        //ImageIcon settingIcon = new ImageIcon(MainMenu.class.getResource("src/Icons/setting_icon.png"));
-        ImageIcon shareIcon = new ImageIcon(MainMenu.class.getResource("src/Icons/share_icon.png"));
-        ImageIcon aboutUsIcon = new ImageIcon(MainMenu.class.getResource("src/Icons/aboutus_icon.png"));
-        ImageIcon shoppingIcon = new ImageIcon(MainMenu.class.getResource("src/Icons/shopping_icon.png"));
-
-        //resize icon to 65x65
-        int iconSize = 65;
-        //settingIcon = new ImageIcon(settingIcon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH));
-        shareIcon = new ImageIcon(shareIcon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH));
-        aboutUsIcon = new ImageIcon(aboutUsIcon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH));
-        shoppingIcon = new ImageIcon(shoppingIcon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH));
-        
-        //create buttons
-        //JButton settingButton = new JButton(settingIcon);
-        JButton shareButton = new JButton(shareIcon);
-        JButton aboutUsButton = new JButton(aboutUsIcon);
-        JButton shoppingButton = new JButton(shoppingIcon);
-        
-        //mute button
-        JButton muteButton = new JButton("Mute");
-        muteButton.setBounds(20, 620, 70, 70);
-        muteButton.addActionListener(e -> {
-            if (musicClip != null && musicClip.isRunning()) {
-                musicClip.stop();
-                muteButton.setText("Unmute");
-            } else {
-                if (musicClip != null) {
-                    musicClip.start();
-                    muteButton.setText("Mute");
+            // Panel chính với ảnh nền
+            JPanel mainPanel = new JPanel() {
+                @Override
+                protected void paintComponent(Graphics g) {
+                    super.paintComponent(g);
+                    ImageIcon background = new ImageIcon("src/Image for background/Bg.gif");
+                    g.drawImage(background.getImage(), 0, 0, getWidth(), getHeight(), this);
                 }
+            };
+            mainPanel.setLayout(new BorderLayout());
+
+            // Tiêu đề
+            JLabel titleLabel = new JLabel("Memory Game", SwingConstants.CENTER);
+            titleLabel.setFont(new Font("Snap ITC", Font.BOLD, 60));
+            titleLabel.setForeground(Color.BLACK);
+            titleLabel.setBorder(BorderFactory.createEmptyBorder(30, 0, 30, 0));
+            mainPanel.add(titleLabel, BorderLayout.NORTH);
+
+            // Panel nút chính
+            JPanel buttonPanel = new JPanel(new GridLayout(4,11,20,20));
+            buttonPanel.setOpaque(false);
+            buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 100, 20, 100));
+
+            Font buttonFont = new Font("Snap ITC", Font.BOLD, 28);
+
+            JButton playButton = new JButton("Play");
+            JButton howToPlayButton = new JButton("How To Play");
+            JButton collectionButton = new JButton("Collection");
+            JButton quitButton = new JButton("Quit");
+
+            for (JButton btn : new JButton[]{playButton, howToPlayButton, collectionButton, quitButton}) {
+                btn.setFont(buttonFont);
+                btn.setFocusPainted(false);
+                btn.setBackground(Color.WHITE);
+                buttonPanel.add(btn);
             }
-        });
-        
-        playButton.setBounds(250, 200, 275, 55);
-        howToPlayButton.setBounds(250, 300, 275, 55);
-        collectionButton.setBounds(250, 400, 275, 55);
-        quitButton.setBounds(250, 500, 275, 55);
 
-        //settingButton.setBounds(20, 620, 70, 70); 
-        shareButton.setBounds(120, 620, 70, 70);
-        shoppingButton.setBounds(220, 620, 70, 70); 
-        aboutUsButton.setBounds(700, 620, 70, 70); 
+            mainPanel.add(buttonPanel, BorderLayout.CENTER);
 
-        playButton.setHorizontalTextPosition(SwingConstants.CENTER);
-        playButton.setVerticalTextPosition(SwingConstants.BOTTOM);
-        playButton.setFont(new Font("Snap ITC", Font.BOLD, 30));
-        playButton.setForeground(Color.BLACK);
+            // Panel icon nhỏ phía dưới
+            JPanel iconPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 10));
+            iconPanel.setOpaque(false);
 
-        howToPlayButton.setHorizontalTextPosition(SwingConstants.CENTER);
-        howToPlayButton.setVerticalTextPosition(SwingConstants.BOTTOM);
-        howToPlayButton.setFont(new Font("Snap ITC", Font.BOLD, 30));
-        howToPlayButton.setForeground(Color.BLACK);
+            int iconSize = 50;
+            JButton shareButton = new JButton(new ImageIcon(new ImageIcon("src/Icons/share_icon.png").getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH)));
+            JButton aboutUsButton = new JButton(new ImageIcon(new ImageIcon("src/Icons/aboutus_icon.png").getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH)));
+            JButton shoppingButton = new JButton(new ImageIcon(new ImageIcon("src/Icons/shopping_icon.png").getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH)));
 
-        collectionButton.setHorizontalTextPosition(SwingConstants.CENTER);
-        collectionButton.setVerticalTextPosition(SwingConstants.BOTTOM);
-        collectionButton.setFont(new Font("Snap ITC", Font.BOLD, 30));
-        collectionButton.setForeground(Color.BLACK);
+            JButton muteButton = new JButton("Mute");
 
-        quitButton.setHorizontalTextPosition(SwingConstants.CENTER);
-        quitButton.setVerticalTextPosition(SwingConstants.BOTTOM);
-        quitButton.setFont(new Font("Snap ITC", Font.BOLD, 30));
-        quitButton.setForeground(Color.BLACK);
+            iconPanel.add(muteButton);
+            iconPanel.add(shareButton);
+            iconPanel.add(shoppingButton);
+            iconPanel.add(aboutUsButton);
+            mainPanel.add(iconPanel, BorderLayout.SOUTH);
 
-        panel.add(playButton);
-        panel.add(howToPlayButton);
-        panel.add(collectionButton);
-        panel.add(quitButton);
-        //panel.add(settingButton);
-        panel.add(shareButton);
-        panel.add(aboutUsButton);
-        panel.add(shoppingButton);
-        panel.add(muteButton);
-
-        howToPlayButton.addActionListener(e -> HowToPlay.showHowToPlay());
-
-        playButton.addActionListener(e -> {
-            if (musicClip != null && musicClip.isRunning()) {
-                musicClip.stop();
-            }
-            frame.dispose();
-
-            //Launch the game
-            SwingUtilities.invokeLater(() -> {
+            // Thêm hành động nút
+            playButton.addActionListener(e -> {
+                if (musicClip != null) musicClip.stop();
+                frame.dispose();
                 new MatchCards();
             });
-        });
 
-        howToPlayButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new HowToPlay();
-            }
-        });
-        /*settingButton.addActionListener(e -> Setting.showSettings());
-        settingButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new Setting();
-            }
-        });*/
+            howToPlayButton.addActionListener(e -> new HowToPlay());
+            collectionButton.addActionListener(e -> new Collection());
+            quitButton.addActionListener(e -> System.exit(0));
 
-        shareButton.addActionListener(e -> Share.showShareMenu());
-        shareButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new Share();
-            }
-        });
+            muteButton.addActionListener(e -> {
+                if (musicClip != null && musicClip.isRunning()) {
+                    musicClip.stop();
+                    muteButton.setText("Unmute");
+                } else {
+                    if (musicClip != null) {
+                        musicClip.start();
+                        muteButton.setText("Mute");
+                    }
+                }
+            });
 
-        aboutUsButton.addActionListener(e -> AboutUs.showAboutUs());
-        aboutUsButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new AboutUs();
-            }
-        });
-        quitButton.addActionListener(e -> System.exit(0));
+            shareButton.addActionListener(e -> new Share());
+            aboutUsButton.addActionListener(e -> new AboutUs());
+            shoppingButton.addActionListener(e -> new Shopping());
 
-        frame.add(panel);
-        frame.setVisible(true);
-        
+            frame.add(mainPanel);
+            frame.setVisible(true);
+        });
     }
 }
