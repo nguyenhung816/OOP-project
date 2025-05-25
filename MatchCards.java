@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import javax.swing.*;
 import javax.swing.border.Border;
 
@@ -43,6 +44,8 @@ public class MatchCards {
     int cardHeight = 128;
     int level = 1;
     final int maxLevel = 3;
+    int show2CardIndex1 = -1;
+    int show2CardIndex2 = -1;
 
     ArrayList<Card> cardSet; //create a deck of cards with cardNames and cardImageIcons
     ImageIcon cardBackImageIcon;
@@ -61,19 +64,29 @@ public class MatchCards {
     JLabel retriesLabel = new JLabel();
     JLabel levelLabel = new JLabel();
 
+    JPanel itemsPanel = new JPanel();
+    JButton showAllCardsBtn = new JButton();
+    JButton show2MatchCardsBtn = new JButton();
+    JButton extendLivesBtn = new JButton();
+
+    int showAllCardsUses = 3;
+    int show2MatchCardsUses = 2;
+    int extendLivesUses = 1;
+
+
     int lives = 5;
     int retries = 0;
     ArrayList<JButton> board = new ArrayList<>();
     Timer hideCardTimer;
+    Timer show2CardsTimer;
     boolean gameReady = false;
     JButton card1Selected;
     JButton card2Selected;
     
     MatchCards() {
-
         // frame.setVisible(true);
         frame.setLayout(new BorderLayout());
-        frame.setSize(boardWidth, boardHeight);
+        frame.setSize(boardWidth + 200, boardHeight + 100);
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -101,6 +114,9 @@ public class MatchCards {
 
         frame.add(textPanel, BorderLayout.EAST);
         textPanel.add(textLabel);
+
+        setupItemsPanel();
+        frame.add(itemsPanel, BorderLayout.WEST);
 
         //card game board
         board = new ArrayList<JButton>();
@@ -140,6 +156,8 @@ public class MatchCards {
 
         hideCardTimer = new Timer(3000, e -> hideCards());
         hideCardTimer.setRepeats(false);
+
+        show2CardsTimer = new Timer(3000, e-> hideShow2Cards());
 
         configureLevel();
         setupNewLevel();
@@ -215,6 +233,7 @@ public class MatchCards {
         livesLabel.setText("Lives: " + Integer.toString(lives));
         retriesLabel.setText("Retries: " + Integer.toString(retries));
 
+
         boardPanel.removeAll();
         boardPanel.setLayout(new GridLayout(rows, columns));
         board.clear();
@@ -232,6 +251,7 @@ public class MatchCards {
 
         boardPanel.revalidate();
         boardPanel.repaint();
+        frame.pack();
         gameReady = false;
         restartButton.setEnabled(false);
         hideCardTimer.start();
@@ -252,6 +272,16 @@ public class MatchCards {
             restartButton.setEnabled(true);
         }
     }
+
+    Timer showAllTimer = new Timer(3000, new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e){
+            
+            for(int i = 0; i < board.size(); i++){
+                board.get(i).setIcon(cardBackImageIcon);
+            }
+        }
+    });
 
     ActionListener cardClickListener = new ActionListener() {
         @Override
@@ -317,5 +347,145 @@ public class MatchCards {
             frame.dispose(); 
             //[ADD] implement an option to restart the game frome level 1 or return to the main menu 
         }
+    }
+
+    void setupItemsPanel() {
+        itemsPanel.setLayout(new BoxLayout(itemsPanel, BoxLayout.Y_AXIS));
+        itemsPanel.setBorder(BorderFactory.createTitledBorder("Items"));
+        itemsPanel.setPreferredSize(new Dimension(180, boardHeight));
+
+        showAllCardsBtn.setText("<html><center>Show All Cards<br>(" + showAllCardsUses + " uses left)</center></html>");
+        showAllCardsBtn.setPreferredSize(new Dimension(160, 50));
+        showAllCardsBtn.addActionListener(e -> useShowAllCards());
+        itemsPanel.add(showAllCardsBtn);
+        itemsPanel.add(Box.createVerticalStrut(10));
+
+        show2MatchCardsBtn.setText("<html><center>Show 2 Match Cards<br>(" + show2MatchCardsUses + " uses left)</center></html>");
+        show2MatchCardsBtn.setPreferredSize(new Dimension(160, 50));
+        show2MatchCardsBtn.addActionListener(e -> useShow2MatchCards());
+        itemsPanel.add(show2MatchCardsBtn);
+        itemsPanel.add(Box.createVerticalStrut(10));
+
+        extendLivesBtn.setText("<html><center>Extend Lives<br>(" + extendLivesUses + " use left)</center></html>");
+        extendLivesBtn.setPreferredSize(new Dimension(160, 50));
+        extendLivesBtn.addActionListener(e -> useExtendLives());
+        itemsPanel.add(extendLivesBtn);
+    }
+
+    void useShowAllCards() {
+        ArrayList<Integer> originallyHidden = new ArrayList<>();
+        if (showAllCardsUses <= 0 || !gameReady) return;
+        
+        showAllCardsUses--;
+        showAllCardsBtn.setText("<html><center>Show All Cards<br>(" + showAllCardsUses + " uses left)</center></html>");
+        if (showAllCardsUses == 0) {
+            showAllCardsBtn.setEnabled(false);
+        }
+
+  
+        for (int i = 0; i < board.size(); i++) {
+            JButton tile = board.get(i);
+            if (!tile.getIcon().equals(cardSet.get(i).cardImageIcon)) {
+                tile.setIcon(cardSet.get(i).cardImageIcon);
+                originallyHidden.add(i);
+            }
+        }
+        Timer showAllTimer = new Timer(3000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                for (int index : originallyHidden) {
+                    board.get(index).setIcon(cardBackImageIcon); // Flip back
+                }
+                ((Timer) e.getSource()).stop();
+            }
+        });
+        showAllTimer.setRepeats(false);
+        showAllTimer.start();
+    }
+
+    void useShow2MatchCards() {
+        if (show2MatchCardsUses <= 0 || !gameReady) return;
+        
+        show2MatchCardsUses--;
+        show2MatchCardsBtn.setText("<html><center>Show 2 Match Cards<br>(" + show2MatchCardsUses + " uses left)</center></html>");
+        if (show2MatchCardsUses == 0) {
+            show2MatchCardsBtn.setEnabled(false);
+        }
+
+        ArrayList<Integer> availableCards = new ArrayList<>();
+        for (int i = 0; i < cardSet.size(); i++) {
+            if (board.get(i).getIcon() == cardBackImageIcon) {
+                availableCards.add(i);
+            }
+        }
+
+        if (availableCards.size() >= 2) {
+          
+            String targetCardName = null;
+            int firstCardIndex = -1, secondCardIndex = -1;
+            
+            for (int i = 0; i < availableCards.size() - 1; i++) {
+                int cardIndex1 = availableCards.get(i);
+                for (int j = i + 1; j < availableCards.size(); j++) {
+                    int cardIndex2 = availableCards.get(j);
+                    if (cardSet.get(cardIndex1).cardName.equals(cardSet.get(cardIndex2).cardName)) {
+                        firstCardIndex = cardIndex1;
+                        secondCardIndex = cardIndex2;
+                        break;
+                    }
+                }
+                if (firstCardIndex != -1) break;
+            }
+            
+            if (firstCardIndex != -1 && secondCardIndex != -1) {
+     
+                board.get(firstCardIndex).setIcon(cardSet.get(firstCardIndex).cardImageIcon);
+                board.get(secondCardIndex).setIcon(cardSet.get(secondCardIndex).cardImageIcon);
+                
+                show2CardIndex1 = firstCardIndex;
+                show2CardIndex2 = secondCardIndex;
+                
+                show2CardsTimer.setRepeats(false);
+                show2CardsTimer.start();
+            }
+        }
+    }
+
+    void hideShow2Cards() {
+        if (show2CardIndex1 != -1) {
+            board.get(show2CardIndex1).setIcon(cardBackImageIcon);
+            board.get(show2CardIndex2).setIcon(cardBackImageIcon);
+            show2CardIndex1 = -1;
+            show2CardIndex2 = -1;
+        }
+    }
+
+    void useExtendLives() {
+        if (extendLivesUses <= 0) return;
+        
+        extendLivesUses--;
+        extendLivesBtn.setText("<html><center>Extend Lives<br>(" + extendLivesUses + " use left)</center></html>");
+        if (extendLivesUses == 0) {
+            extendLivesBtn.setEnabled(false);
+        }
+
+        lives += 1;
+        for (Component comp : textPanel.getComponents()) {
+            if (comp instanceof JLabel && ((JLabel) comp).getText().startsWith("Lives:")) {
+                ((JLabel) comp).setText("Lives: " + Integer.toString(lives));
+                break;
+            }
+        }
+    }
+
+    void updateItemButtons() {
+        showAllCardsBtn.setText("<html><center>Show All Cards<br>(" + showAllCardsUses + " uses left)</center></html>");
+        showAllCardsBtn.setEnabled(showAllCardsUses > 0);
+        
+        show2MatchCardsBtn.setText("<html><center>Show 2 Match Cards<br>(" + show2MatchCardsUses + " uses left)</center></html>");
+        show2MatchCardsBtn.setEnabled(show2MatchCardsUses > 0);
+        
+        extendLivesBtn.setText("<html><center>Extend Lives<br>(" + extendLivesUses + " use left)</center></html>");
+        extendLivesBtn.setEnabled(extendLivesUses > 0);
     }
 }
