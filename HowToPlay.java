@@ -48,4 +48,3 @@ public class HowToPlay {
         HowToPlay.showHowToPlay();
     }
 }
-//
