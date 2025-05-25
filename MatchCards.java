@@ -2,11 +2,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import javax.swing.*;
-import javax.swing.border.Border;
-
 
 public class MatchCards {
-    
+    // Thẻ và items
     class Card {
         String cardName;
         ImageIcon cardImageIcon;
@@ -21,226 +19,201 @@ public class MatchCards {
         }
     }
 
-    String[] cardList = { //track cardNames
-        
-        "arbok",
-        "beedrill",
-        "blastoise",
-        "butterfree",
-        "charizard",
-        "dugtrio",
-        "nidoqueen",
-        "machamp",
-        "venusaur",
-        "jigglypuff"
-    };
-
+    // Các biến chính
     int rows = 4;
     int columns = 5;
     int cardWidth = 90;
     int cardHeight = 128;
-
-    ArrayList<Card> cardSet; //create a deck of cards with cardNames and cardImageIcons
-    ImageIcon cardBackImageIcon;
-
-    int boardWidth = columns * cardWidth; //5*128 = 640px
-    int boardHeight = rows * cardHeight; //4*90 = 360px
-
-    JFrame frame = new JFrame("Pokemon Match Cards");
-    JLabel textLabel = new JLabel();
-    JPanel textPanel = new JPanel();
-    JPanel boardPanel = new JPanel();
-    JPanel restartGamePanel = new JPanel();
-    JButton restartButton = new JButton();
-
     int lives = 3;
     int retries = 0;
+    int showAllUses = 3;
+    int showTwoUses = 2;
+    int extendMovesUses = 1;
+
+    ArrayList<Card> cardSet;
     ArrayList<JButton> board;
+    ImageIcon cardBackImageIcon;
     Timer hideCardTimer;
     boolean gameReady = false;
     JButton card1Selected;
     JButton card2Selected;
-    
+
+    JLabel livesLabel = new JLabel("Lives: " + lives);
+    JLabel retriesLabel = new JLabel("Retries: " + retries);
+    JLabel showAllLabel = new JLabel( + showAllUses + " uses left");
+    JLabel showTwoLabel = new JLabel(+ showTwoUses + " uses left");
+    JLabel extendMovesLabel = new JLabel( + extendMovesUses + " uses left");
+
+    JFrame frame = new JFrame("Pokemon Match Cards with Items");
+
     MatchCards() {
         setupCards();
         shuffleCards();
 
-        // frame.setVisible(true);
+        // Giao diện chính
         frame.setLayout(new BorderLayout());
-        frame.setSize(boardWidth, boardHeight);
+        frame.setSize(columns * cardWidth + 200, rows * cardHeight + 100);
         frame.setLocationRelativeTo(null);
-        frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        //Lives text
-        JLabel livesLabel = new JLabel("Lives: " + Integer.toString(lives));
-        livesLabel.setFont(new Font("Arial", Font.PLAIN, 20));
-        livesLabel.setHorizontalAlignment(JLabel.CENTER);
-        //Retries text
-        JLabel retriesLabel = new JLabel("Retries: " + Integer.toString(retries)); // NEW
-        retriesLabel.setFont(new Font("Arial", Font.PLAIN, 20));
-        retriesLabel.setHorizontalAlignment(JLabel.CENTER);
-        textPanel.setPreferredSize(new Dimension(boardWidth/2, 60));
+        JPanel textPanel = new JPanel();
+        textPanel.setLayout(new GridLayout(1, 2));
         textPanel.add(livesLabel);
         textPanel.add(retriesLabel);
-        frame.add(textPanel, BorderLayout.EAST);
-        textPanel.add(textLabel);
+        frame.add(textPanel, BorderLayout.NORTH);
 
-        //card game board
-        board = new ArrayList<JButton>();
+        JPanel boardPanel = new JPanel();
         boardPanel.setLayout(new GridLayout(rows, columns));
+        board = new ArrayList<>();
+
         for (int i = 0; i < cardSet.size(); i++) {
             JButton tile = new JButton();
             tile.setPreferredSize(new Dimension(cardWidth, cardHeight));
-            tile.setOpaque(true);
-            tile.setIcon(cardSet.get(i).cardImageIcon);
-            tile.setFocusable(false);
-            tile.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (!gameReady) {
-                        return;
-                    }
-                    JButton tile = (JButton) e.getSource();
-                    if (tile.getIcon() == cardBackImageIcon) {
-                        if (card1Selected == null) {
-                            card1Selected = tile;
-                            int index = board.indexOf(card1Selected);
-                            card1Selected.setIcon(cardSet.get(index).cardImageIcon);
-                        }
-                        else if (card2Selected == null) {
-                            card2Selected = tile;
-                            int index = board.indexOf(card2Selected);
-                            card2Selected.setIcon(cardSet.get(index).cardImageIcon);
-
-                            if (card1Selected.getIcon() != card2Selected.getIcon()) {
-                                lives -= 1;
-                                livesLabel.setText("Lives: " + Integer.toString(lives));
-                                hideCardTimer.start();
-                                if(lives == 0){
-                                    card1Selected = null;
-                                    card2Selected = null;
-                                    shuffleCards();
-
-                                    for (int i = 0; i < board.size(); i++) {
-                                        board.get(i).setIcon(cardSet.get(i).cardImageIcon);
-                                    }
-                    
-                                    lives = 3;
-                                    livesLabel.setText("Lives: " + Integer.toString(lives));
-
-                                    retries +=1;
-                                    retriesLabel.setText("Retries: " + Integer.toString(retries));
-                                    hideCardTimer.start();
-                                }
-                            }
-                            else {
-                                card1Selected = null;
-                                card2Selected = null;
-                            }
-                        }
-                    }
-                }
-            });
+            tile.setIcon(cardBackImageIcon);
+            tile.addActionListener(e -> handleCardClick(tile));
             board.add(tile);
             boardPanel.add(tile);
         }
-        frame.add(boardPanel);
 
-        //restart game button
-        restartButton.setFont(new Font("Arial", Font.PLAIN, 16));
-        restartButton.setText("Restart Game");
-        restartButton.setPreferredSize(new Dimension(boardWidth, 30));
-        restartButton.setFocusable(false);
-        restartButton.setEnabled(false);
-        restartButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!gameReady) {
-                    return;
-                }
+        frame.add(boardPanel, BorderLayout.CENTER);
 
-                gameReady = false;
-                restartButton.setEnabled(false);
-                card1Selected = null;
-                card2Selected = null;
-                shuffleCards();
+        // Bảng điều khiển items
+        JPanel itemPanel = new JPanel();
+        itemPanel.setLayout(new GridLayout(3, 1));
 
-                //re assign buttons with new cards
-                for (int i = 0; i < board.size(); i++) {
-                    board.get(i).setIcon(cardSet.get(i).cardImageIcon);
-                }
+        JButton showAllButton = new JButton("Show All Cards");
+        showAllButton.addActionListener(e -> useShowAll());
 
-                lives = 3;
-                livesLabel.setText("Lives: " + Integer.toString(lives));
-                retries += 1;
-                retriesLabel.setText("Retries: " + Integer.toString(retries));
+        JButton showTwoButton = new JButton("Show 2 Matches");
+        showTwoButton.addActionListener(e -> useShowTwoMatches());
 
-                hideCardTimer.start();
-            }
-        });
-        restartGamePanel.add(restartButton);
-        frame.add(restartGamePanel, BorderLayout.SOUTH);
+        JButton extendMovesButton = new JButton("Extend Moves");
+        extendMovesButton.addActionListener(e -> useExtendMoves());
 
-        frame.pack();
+        itemPanel.add(showAllButton);
+        itemPanel.add(showAllLabel);
+        itemPanel.add(showTwoButton);
+        itemPanel.add(showTwoLabel);
+        itemPanel.add(extendMovesButton);
+        itemPanel.add(extendMovesLabel);
+
+        frame.add(itemPanel, BorderLayout.EAST);
+
         frame.setVisible(true);
 
-        //start game
-        hideCardTimer = new Timer(1500, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                hideCards();
-            }
-        });
+        hideCardTimer = new Timer(1500, e -> hideCards());
         hideCardTimer.setRepeats(false);
         hideCardTimer.start();
-
     }
 
+    // Cài đặt thẻ
     void setupCards() {
-        cardSet = new ArrayList<Card>();
+        cardSet = new ArrayList<>();
+        String[] cardList = {"arbok", "beedrill", "blastoise", "butterfree", "charizard"};
+
         for (String cardName : cardList) {
-            //load each card image
             Image cardImg = new ImageIcon(getClass().getResource("src/img/" + cardName + ".jpg")).getImage();
             ImageIcon cardImageIcon = new ImageIcon(cardImg.getScaledInstance(cardWidth, cardHeight, java.awt.Image.SCALE_SMOOTH));
-
-            //create card object and add to cardSet
-            Card card = new Card(cardName, cardImageIcon);
-            cardSet.add(card);
+            cardSet.add(new Card(cardName, cardImageIcon));
         }
-        cardSet.addAll(cardSet);
+        cardSet.addAll(cardSet); // Nhân đôi để tạo cặp
 
-        //load the back card image
         Image cardBackImg = new ImageIcon(getClass().getResource("src/img/back.jpg")).getImage();
         cardBackImageIcon = new ImageIcon(cardBackImg.getScaledInstance(cardWidth, cardHeight, java.awt.Image.SCALE_SMOOTH));
     }
 
     void shuffleCards() {
-        System.out.println(cardSet);
-        //shuffle
         for (int i = 0; i < cardSet.size(); i++) {
-            int j = (int) (Math.random() * cardSet.size()); //get random index
-            //swap
+            int j = (int) (Math.random() * cardSet.size());
             Card temp = cardSet.get(i);
             cardSet.set(i, cardSet.get(j));
             cardSet.set(j, temp);
         }
-        System.out.println(cardSet);
+    }
+
+    void handleCardClick(JButton tile) {
+        if (!gameReady || tile.getIcon() != cardBackImageIcon) return;
+
+        int index = board.indexOf(tile);
+        Card selectedCard = cardSet.get(index);
+
+        tile.setIcon(selectedCard.cardImageIcon);
+        if (card1Selected == null) {
+            card1Selected = tile;
+        } else {
+            card2Selected = tile;
+            if (!cardsMatch(card1Selected, card2Selected)) {
+                lives--;
+                livesLabel.setText("Lives: " + lives);
+                hideCardTimer.start();
+            } else {
+                card1Selected = null;
+                card2Selected = null;
+            }
+        }
+    }
+
+    boolean cardsMatch(JButton c1, JButton c2) {
+        int i1 = board.indexOf(c1);
+        int i2 = board.indexOf(c2);
+        return cardSet.get(i1).cardImageIcon.equals(cardSet.get(i2).cardImageIcon);
     }
 
     void hideCards() {
-        if (gameReady && card1Selected != null && card2Selected != null) { //only flip 2 cards
+        if (card1Selected != null && card2Selected != null) {
             card1Selected.setIcon(cardBackImageIcon);
-            card1Selected = null;
             card2Selected.setIcon(cardBackImageIcon);
+            card1Selected = null;
             card2Selected = null;
         }
-        else { //flip all cards face down
+    }
+
+    // Sử dụng item: Hiển thị tất cả thẻ
+    void useShowAll() {
+        if (showAllUses > 0) {
+            showAllUses--;
+            showAllLabel.setText( + showAllUses + " uses left");
             for (int i = 0; i < board.size(); i++) {
-                board.get(i).setIcon(cardBackImageIcon);
+                board.get(i).setIcon(cardSet.get(i).cardImageIcon);
             }
-            gameReady = true;
-            restartButton.setEnabled(true);
+            Timer timer = new Timer(1500, e -> {
+                for (int i = 0; i < board.size(); i++) {
+                    board.get(i).setIcon(cardBackImageIcon);
+                }
+            });
+            timer.setRepeats(false);
+            timer.start();
         }
+    }
+
+    // Sử dụng item: Hiển thị 2 thẻ phù hợp
+    void useShowTwoMatches() {
+        if (showTwoUses > 0) {
+            showTwoUses--;
+            showTwoLabel.setText( + showTwoUses + " uses left");
+            for (int i = 0; i < board.size(); i++) {
+                for (int j = i + 1; j < board.size(); j++) {
+                    if (cardsMatch(board.get(i), board.get(j))) {
+                        board.get(i).setIcon(cardSet.get(i).cardImageIcon);
+                        board.get(j).setIcon(cardSet.get(j).cardImageIcon);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    // Sử dụng item: Thêm lượt
+    void useExtendMoves() {
+        if (extendMovesUses > 0) {
+            extendMovesUses--;
+            extendMovesLabel.setText(+ extendMovesUses + " uses left");
+            lives += 1;
+            livesLabel.setText("Lives: " + lives);
+        }
+    }
+
+    public static void main(String[] args) {
+        new MatchCards();
     }
 }
