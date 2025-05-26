@@ -98,7 +98,7 @@ public class MatchCards {
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        textPanel.setPreferredSize(new Dimension(200, 80));
+        textPanel.setPreferredSize(new Dimension(250, 80));
         textPanel.setLayout(new GridLayout(5, 1));
 
         //Lives text
