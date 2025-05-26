@@ -60,18 +60,15 @@ public class MainMenu {
         //load and scale icon
         ImageIcon shareIcon = new ImageIcon(MainMenu.class.getResource("src/Icons/share_icon.png"));
         ImageIcon aboutUsIcon = new ImageIcon(MainMenu.class.getResource("src/Icons/aboutus_icon.png"));
-        ImageIcon shoppingIcon = new ImageIcon(MainMenu.class.getResource("src/Icons/shopping_icon.png"));
 
         //resize icon to 65x65
         int iconSize = 65;
         shareIcon = new ImageIcon(shareIcon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH));
         aboutUsIcon = new ImageIcon(aboutUsIcon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH));
-        shoppingIcon = new ImageIcon(shoppingIcon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH));
         
         //create buttons
         JButton shareButton = new JButton(shareIcon);
         JButton aboutUsButton = new JButton(aboutUsIcon);
-        JButton shoppingButton = new JButton(shoppingIcon);
         
         //mute button
         JButton muteButton = new JButton("Mute");
@@ -92,11 +89,8 @@ public class MainMenu {
         howToPlayButton.setBounds(250, 300, 275, 55);
         collectionButton.setBounds(250, 400, 275, 55);
         quitButton.setBounds(250, 500, 275, 55);
-
-        //settingButton.setBounds(20, 620, 70, 70); 
         shareButton.setBounds(120, 620, 70, 70);
-        shoppingButton.setBounds(220, 620, 70, 70); 
-        aboutUsButton.setBounds(700, 620, 70, 70); 
+        aboutUsButton.setBounds(220, 620, 70, 70); 
 
         playButton.setHorizontalTextPosition(SwingConstants.CENTER);
         playButton.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -124,7 +118,6 @@ public class MainMenu {
         panel.add(quitButton);
         panel.add(shareButton);
         panel.add(aboutUsButton);
-        panel.add(shoppingButton);
         panel.add(muteButton);
 
         howToPlayButton.addActionListener(e -> HowToPlay.showHowToPlay());
