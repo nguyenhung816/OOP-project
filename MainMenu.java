@@ -1,4 +1,3 @@
-import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -14,8 +13,6 @@ import java.io.IOException;
 public class MainMenu {
 
     private static Clip musicClip;
-    private static float musicVolume = 0.5f; // Default music volume (50%)
-    private static float soundVolume = 0.5f; 
     public static void playMusic(String filePath) {
         try {
             File musicFile = new File(filePath);
@@ -28,7 +25,7 @@ public class MainMenu {
             e.printStackTrace();
         }
     } 
-    public static void main(String[] args) {
+    public MainMenu() {
         JFrame frame = new JFrame("Memory Game");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1440, 800);
@@ -60,18 +57,15 @@ public class MainMenu {
         //load and scale icon
         ImageIcon shareIcon = new ImageIcon(MainMenu.class.getResource("src/Icons/share_icon.png"));
         ImageIcon aboutUsIcon = new ImageIcon(MainMenu.class.getResource("src/Icons/aboutus_icon.png"));
-        ImageIcon shoppingIcon = new ImageIcon(MainMenu.class.getResource("src/Icons/shopping_icon.png"));
 
         //resize icon to 65x65
         int iconSize = 65;
         shareIcon = new ImageIcon(shareIcon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH));
         aboutUsIcon = new ImageIcon(aboutUsIcon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH));
-        shoppingIcon = new ImageIcon(shoppingIcon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH));
         
         //create buttons
         JButton shareButton = new JButton(shareIcon);
         JButton aboutUsButton = new JButton(aboutUsIcon);
-        JButton shoppingButton = new JButton(shoppingIcon);
         
         //mute button
         JButton muteButton = new JButton("Mute");
@@ -92,10 +86,8 @@ public class MainMenu {
         howToPlayButton.setBounds(250, 300, 275, 55);
         collectionButton.setBounds(250, 400, 275, 55);
         quitButton.setBounds(250, 500, 275, 55);
-
         shareButton.setBounds(120, 620, 70, 70);
-        shoppingButton.setBounds(220, 620, 70, 70); 
-        aboutUsButton.setBounds(700, 620, 70, 70); 
+        aboutUsButton.setBounds(220, 620, 70, 70); 
 
         playButton.setHorizontalTextPosition(SwingConstants.CENTER);
         playButton.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -123,7 +115,6 @@ public class MainMenu {
         panel.add(quitButton);
         panel.add(shareButton);
         panel.add(aboutUsButton);
-        panel.add(shoppingButton);
         panel.add(muteButton);
 
         howToPlayButton.addActionListener(e -> HowToPlay.showHowToPlay());
