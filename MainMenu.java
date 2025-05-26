@@ -138,6 +138,10 @@ public class MainMenu {
             }
         });
 
+        collectionButton.addActionListener(e -> {
+            Collection.showCollectionWindow();
+        });
+
         shareButton.addActionListener(e -> Share.showShareMenu());
         shareButton.addActionListener(new ActionListener() {
             @Override

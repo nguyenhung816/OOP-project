@@ -413,16 +413,35 @@ public class MatchCards {
 
         if (level < maxLevel) {
             JOptionPane.showMessageDialog(frame, "Level " + level + " completed!\nStarting Level " + (level + 1));
+
+            Collection.unlockRandomPokemon();
             level++;         
             lives = 5;       
             retries = 0;
             scoreLabel.setText("Score: " + Integer.toString(score));
             setupNewLevel(); 
         } else {
+            Collection.unlockRandomPokemon();
+            String playerName = JOptionPane.showInputDialog(frame, "Congratulations! You have completed all levels!\nPlease enter your name to save your score:", "Game Completed", JOptionPane.INFORMATION_MESSAGE);
+            if (playerName != null && !playerName.trim().isEmpty()) {
+                Leaderboard.saveScore(playerName, score);
+            } 
+            else {
+                playerName = "Anonymous";
+            
+                Leaderboard.saveScore(playerName, score);
+                frame.dispose();
+
+                SwingUtilities.invokeLater(() -> {
+                    Leaderboard leaderboard = new Leaderboard();
+                    leaderboard.setVisible(true);
+                });
+            }
             long endTime = System.currentTimeMillis();
             long elaspedTime = endTime - startTime;
             String formattedTime = formatTime(elaspedTime);
-             Object[] options = {"Main Menu", "Restart"};
+
+            Object[] options = {"Main Menu", "Restart"};
             int choice = JOptionPane.showOptionDialog(frame,
                     "Congratulations! You have beaten every level!\nLevel Bonus: " + levelBonus +
                     "\nTotal Score: " + score + "\nTime: " + formattedTime,
@@ -432,7 +451,6 @@ public class MatchCards {
                     null,
                     options,
                     options[0]);
-            
             if (choice == 0) { // Main Menu
                 System.out.println("Attempting to open MainMenu from Level 3 completion");
                 try {
@@ -444,7 +462,7 @@ public class MatchCards {
                     ex.printStackTrace();
                 }
             } else if (choice == 1) { // Restart
-                // Reset thời gian và điểm
+                // Reset time and score
                 startTime = System.currentTimeMillis();
                 timeLabel.setText("Time: 00:00");
                 level = 1;
@@ -485,6 +503,8 @@ public class MatchCards {
         if (showAllCardsUses <= 0 || !gameReady) return;
         
         showAllCardsUses--;
+        score -= 5;
+        scoreLabel.setText("Score: " + Integer.toString(score));
         showAllCardsBtn.setText("<html><center>Show All Cards<br>(" + showAllCardsUses + " uses left)</center></html>");
         if (showAllCardsUses == 0) {
             showAllCardsBtn.setEnabled(false);
@@ -515,6 +535,8 @@ public class MatchCards {
         if (show2MatchCardsUses <= 0 || !gameReady) return;
         
         show2MatchCardsUses--;
+        score -= 10;
+        scoreLabel.setText("Score: " + Integer.toString(score));
         show2MatchCardsBtn.setText("<html><center>Show 2 Match Cards<br>(" + show2MatchCardsUses + " uses left)</center></html>");
         if (show2MatchCardsUses == 0) {
             show2MatchCardsBtn.setEnabled(false);
@@ -570,6 +592,8 @@ public class MatchCards {
         if (extendLivesUses <= 0) return;
         
         extendLivesUses--;
+        score -=20;
+        scoreLabel.setText("Score: " + Integer.toString(score));
         extendLivesBtn.setText("<html><center>Extend Lives<br>(" + extendLivesUses + " use left)</center></html>");
         if (extendLivesUses == 0) {
             extendLivesBtn.setEnabled(false);
