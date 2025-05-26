@@ -618,4 +618,3 @@ public class MatchCards {
         extendLivesBtn.setText("<html><center>Extend Lives<br>(" + extendLivesUses + " use left)</center></html>");
         extendLivesBtn.setEnabled(extendLivesUses > 0);
     }
-}
