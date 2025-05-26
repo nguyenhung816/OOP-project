@@ -423,16 +423,16 @@ public class MatchCards {
         } else {
             String playerName = JOptionPane.showInputDialog(frame, "Congratulations! You have completed all levels!\nPlease enter your name to save your score:", "Game Completed", JOptionPane.INFORMATION_MESSAGE);
             if (playerName != null && !playerName.trim().isEmpty()) {
-                LeaderBoard.saveScore(playerName, score);
+                Leaderboard.saveScore(playerName, score);
             } 
             else {
                 playerName = "Anonymous";
             
-            LeaderBoard.saveScore(playerName, score);
+            Leaderboard.saveScore(playerName, score);
             frame.dispose();
 
             SwingUtilities.invokeLater(() -> {
-                LeaderBoard leaderboard = new LeaderBoard();
+                Leaderboard leaderboard = new Leaderboard();
                 leaderboard.setVisible(true);
             });
         }

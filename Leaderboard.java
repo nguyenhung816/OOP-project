@@ -18,7 +18,7 @@ public class Leaderboard extends JFrame {
     }
 
     private void loadScores() {
-        File file = new File("leaderboard.txt");
+        File file = new File("src/leaderboard data/leaderboard.txt");
         if (!file.exists()) return;
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
@@ -32,7 +32,7 @@ public class Leaderboard extends JFrame {
     }
 
     public static void saveScore(String player, int score) {
-        try (FileWriter fw = new FileWriter("leaderboard.txt", true)) {
+        try (FileWriter fw = new FileWriter("src/leaderboard data/leaderboard.txt", true)) {
             fw.write(player + " - " + score + "\n");
         } catch (IOException e) {
             e.printStackTrace();
