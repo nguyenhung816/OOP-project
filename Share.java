@@ -1,77 +1,71 @@
+import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import javax.swing.*;
 
 public class Share {
 
     public static void showShareMenu() {
         JFrame frame = new JFrame("Share");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setSize(400, 300);
 
-        // Kích thước responsive theo màn hình
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int width = (int) (screenSize.width * 0.4);  // 40% chiều rộng màn hình
-        int height = (int) (screenSize.height * 0.4); // 40% chiều cao màn hình
-        frame.setSize(width, height);
-
-        JPanel panel = new JPanel(new BorderLayout()) {
+        JPanel panel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                ImageIcon background = new ImageIcon("src/Background game/Background.jpg");
+                ImageIcon background = new ImageIcon("src/Background game/Background.jpg"); 
                 g.drawImage(background.getImage(), 0, 0, getWidth(), getHeight(), this);
             }
         };
+        panel.setLayout(null);
 
-        JLabel title = new JLabel("Share to Social Media", SwingConstants.CENTER);
-        title.setFont(new Font("Snap ITC", Font.BOLD, 30));
+        JLabel title = new JLabel("Share to Social Media");
+        title.setFont(new Font("Snap ITC", Font.BOLD, 25));
         title.setForeground(Color.BLUE);
-        panel.add(title, BorderLayout.NORTH);
+        title.setBounds(30, 20, 400, 40);
+        panel.add(title);
 
-        // Panel chứa các nút chia sẻ
-        JPanel buttonPanel = new JPanel(new GridLayout(2, 3, 20, 20));
-        buttonPanel.setOpaque(false);
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
+        int iconSize = 55;
 
-        int iconSize = Math.max(60, width / 15); // Scale icon theo màn hình
+        // Facebook Button
+        ImageIcon facebookIcon = new ImageIcon(MainMenu.class.getResource("src/Icons/facebook_icon.png"));
+        facebookIcon = new ImageIcon(facebookIcon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH));
+        JButton facebookButton = new JButton(facebookIcon); 
+        facebookButton.setBounds(50, 80, 60, 60);
+        facebookButton.addActionListener(e -> openURL("https://www.facebook.com/sharer/sharer.php?u=https://example.com"));
+        panel.add(facebookButton);
 
-        // Load icon
-        JButton fb = createIconButton("src/Icons/facebook_icon.png", iconSize,
-                "https://www.facebook.com/sharer/sharer.php?u=https://example.com");
+        // X (Twitter) Button
+        ImageIcon twitterIcon = new ImageIcon(MainMenu.class.getResource("src/Icons/xtwitter_icon.png"));
+        twitterIcon = new ImageIcon(twitterIcon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH));
+        JButton twitterButton = new JButton(twitterIcon);
+        twitterButton.setBounds(150, 80, 60, 60);
+        twitterButton.addActionListener(e -> openURL("https://twitter.com/intent/tweet?url=https://example.com&text=Check this out!"));
+        panel.add(twitterButton);
 
-        JButton twitter = createIconButton("src/Icons/xtwitter_icon.png", iconSize,
-                "https://twitter.com/intent/tweet?url=https://example.com&text=Check this out!");
+        // Snapchat Button
+        ImageIcon snapchatIcon = new ImageIcon(MainMenu.class.getResource("src/Icons/snapchat_icon.png"));
+        snapchatIcon = new ImageIcon(snapchatIcon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH));
+        JButton snapchatButton = new JButton(snapchatIcon); 
+        snapchatButton.setBounds(250, 80, 60, 60);
+        snapchatButton.addActionListener(e -> openURL("https://www.snapchat.com/share?u=https://example.com"));
+        panel.add(snapchatButton);
 
-        JButton snapchat = createIconButton("src/Icons/snapchat_icon.png", iconSize,
-                "https://www.snapchat.com/share?u=https://example.com");
+        // WhatsApp Button
+        ImageIcon whatsappIcon = new ImageIcon(MainMenu.class.getResource("src/Icons/whatsapp_icon.png"));
+        whatsappIcon = new ImageIcon(whatsappIcon.getImage().getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH));
+        JButton whatsappButton = new JButton(whatsappIcon); 
+        whatsappButton.setBounds(50, 160, 60, 60);
+        whatsappButton.addActionListener(e -> openURL("https://api.whatsapp.com/send?text=Check%20this%20out!%20https://example.com"));
+        panel.add(whatsappButton);
 
-        JButton whatsapp = createIconButton("src/Icons/whatsapp_icon.png", iconSize,
-                "https://api.whatsapp.com/send?text=Check%20this%20out!%20https://example.com");
+        // Other platforms can be added similarly
 
-        // Add buttons
-        buttonPanel.add(fb);
-        buttonPanel.add(twitter);
-        buttonPanel.add(snapchat);
-        buttonPanel.add(whatsapp);
-
-        panel.add(buttonPanel, BorderLayout.CENTER);
         frame.add(panel);
-
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-    }
-
-    private static JButton createIconButton(String iconPath, int size, String url) {
-        ImageIcon icon = new ImageIcon(iconPath);
-        Image scaled = icon.getImage().getScaledInstance(size, size, Image.SCALE_SMOOTH);
-        JButton button = new JButton(new ImageIcon(scaled));
-        button.setContentAreaFilled(false);
-        button.setBorderPainted(false);
-        button.setFocusPainted(false);
-        button.addActionListener(e -> openURL(url));
-        return button;
     }
 
     private static void openURL(String url) {
@@ -88,6 +82,6 @@ public class Share {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(Share::showShareMenu);
+        Share.showShareMenu();
     }
 }
