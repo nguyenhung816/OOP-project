@@ -25,17 +25,17 @@ public class HowToPlay {
         title.setHorizontalAlignment(SwingConstants.CENTER); 
         panel.add(title);
 
-        JLabel instructions = new JLabel("<html><div style='text-align: center;'>"
-                + "<b>1. Press Play to start the game.<b><br>"
-                + "2. Memorize the positions of the cards.<br>"
-                + "3. Match all pairs to win.<br>"
-                + "4. Use <b>Collection</b> to view unlocked items.<br>"
-                + "</div></html>");
+        JLabel instructions = new JLabel("<html>"
+                + "<b>👉 Press Play to start the game.<b><br>"
+                + "👉 Memorize the positions of the cards.<br>"
+                + "👉 Match all pairs to win.<br>"
+                + "👉 Use <b>Collection</b> to view unlocked items.<br>"
+                + "</html>");
 
         instructions.setFont(new Font("Times New Roman", Font.PLAIN, 30)); 
         instructions.setForeground(Color.BLACK); 
         instructions.setBounds(50, 100, 500, 200);
-        instructions.setHorizontalAlignment(SwingConstants.CENTER); 
+        instructions.setHorizontalAlignment(SwingConstants.LEFT); 
         panel.add(instructions);
 
         frame.add(panel);
