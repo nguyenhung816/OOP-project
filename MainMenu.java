@@ -28,7 +28,7 @@ public class MainMenu {
             e.printStackTrace();
         }
     } 
-    public static void main(String[] args) {
+    public MainMenu() {
         JFrame frame = new JFrame("Memory Game");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1440, 800);

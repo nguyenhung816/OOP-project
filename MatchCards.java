@@ -57,12 +57,15 @@ public class MatchCards {
     JLabel textLabel = new JLabel();
     JPanel textPanel = new JPanel();
     JPanel boardPanel = new JPanel();
-    JPanel restartGamePanel = new JPanel();
+    JPanel bottomGamePanel = new JPanel();
     JButton restartButton = new JButton();
+    JButton exitButton = new JButton();
 
     JLabel livesLabel = new JLabel();
     JLabel retriesLabel = new JLabel();
     JLabel levelLabel = new JLabel();
+    JLabel scoreLabel = new JLabel();
+    JLabel timeLabel = new JLabel();
 
     JPanel itemsPanel = new JPanel();
     JButton showAllCardsBtn = new JButton();
@@ -76,23 +79,27 @@ public class MatchCards {
 
     int lives = 5;
     int retries = 0;
+    int score = 0;
+    long startTime;
     ArrayList<JButton> board = new ArrayList<>();
     Timer hideCardTimer;
     Timer show2CardsTimer;
+    Timer clockTimer;
     boolean gameReady = false;
     JButton card1Selected;
     JButton card2Selected;
     
     MatchCards() {
         // frame.setVisible(true);
+        startTime = System.currentTimeMillis();
         frame.setLayout(new BorderLayout());
-        frame.setSize(boardWidth + 200, boardHeight + 100);
+        frame.setSize(boardWidth + 300, boardHeight + 200);
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         textPanel.setPreferredSize(new Dimension(200, 80));
-        textPanel.setLayout(new GridLayout(3, 1));
+        textPanel.setLayout(new GridLayout(5, 1));
 
         //Lives text
         livesLabel = new JLabel("Lives: " + Integer.toString(lives));
@@ -106,14 +113,30 @@ public class MatchCards {
         levelLabel = new JLabel("Level: " + Integer.toString(level));
         levelLabel.setFont(new Font("Arial", Font.PLAIN, 20));
         levelLabel.setHorizontalAlignment(JLabel.CENTER);
+        //Score text
+        scoreLabel = new JLabel("Score: " + Integer.toString(score));
+        scoreLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+        scoreLabel.setHorizontalAlignment(JLabel.CENTER);
+        //Timer text
+        timeLabel = new JLabel("Time: 00:00");
+        timeLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+        timeLabel.setHorizontalAlignment(JLabel.CENTER);
         
 
         textPanel.add(levelLabel);
         textPanel.add(livesLabel);
         textPanel.add(retriesLabel);
+        textPanel.add(scoreLabel);
+        textPanel.add(timeLabel);
 
         frame.add(textPanel, BorderLayout.EAST);
         textPanel.add(textLabel);
+
+        clockTimer = new Timer(1000, e -> {
+            long elapsed = System.currentTimeMillis() - startTime;
+            timeLabel.setText("Time: " + formatTime(elapsed));
+        });
+        clockTimer.start();
 
         setupItemsPanel();
         frame.add(itemsPanel, BorderLayout.WEST);
@@ -148,11 +171,50 @@ public class MatchCards {
             livesLabel.setText("Lives: " + Integer.toString(lives));
             retries += 1;
             retriesLabel.setText("Retries: " + Integer.toString(retries));
+            scoreLabel.setText("Score " + Integer.toString(score));
             setupNewLevel();
         });
-        
-        restartGamePanel.add(restartButton);
-        frame.add(restartGamePanel, BorderLayout.SOUTH);
+
+        exitButton.setFont(new Font("Arial", Font.PLAIN, 16));
+        exitButton.setText("Exit");
+        exitButton.setPreferredSize(new Dimension(120, 30));
+        exitButton.setMargin(new Insets(5, 10, 5, 10));
+        exitButton.setFocusable(false);
+        exitButton.setEnabled(false);
+        exitButton.addActionListener(e -> {
+            if (!gameReady) {
+                return;
+            }
+            Object[] options = {"Yes", "No"};
+            int choice = JOptionPane.showOptionDialog(frame,
+                    "Are you sure you want to exit to Main Menu?\nYour current score: " + score,
+                    "Exit Game",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE,
+                    null,
+                    options,
+                    options[1]);
+            
+            if (choice == 0) { // Yes
+                System.out.println("Attempting to open MainMenu from Exit");
+                try {
+                    frame.dispose();
+                    //new App();
+                    SwingUtilities.invokeLater(MainMenu::new);
+                } catch (Exception ex) {
+                    System.err.println("Error opening MainMenu: " + ex.getMessage());
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        bottomGamePanel.add(restartButton);
+        bottomGamePanel.add(exitButton);
+        frame.add(bottomGamePanel, BorderLayout.SOUTH);
+        bottomGamePanel.revalidate();
+        bottomGamePanel.repaint();
+        frame.revalidate();
+        frame.repaint();
 
         hideCardTimer = new Timer(3000, e -> hideCards());
         hideCardTimer.setRepeats(false);
@@ -181,7 +243,7 @@ public class MatchCards {
         }
         boardWidth = columns * cardWidth;
         boardHeight = rows * cardHeight;
-        frame.setSize(boardWidth + 200, boardHeight + 100);
+        frame.setSize(boardWidth + 300, boardHeight + 200);
         boardPanel.setPreferredSize(new Dimension(boardWidth, boardHeight));
     }
 
@@ -232,6 +294,8 @@ public class MatchCards {
         levelLabel.setText("Level: " + Integer.toString(level));     
         livesLabel.setText("Lives: " + Integer.toString(lives));
         retriesLabel.setText("Retries: " + Integer.toString(retries));
+        scoreLabel.setText("Score: " + Integer.toString(score));
+        timeLabel.setText("Time: " + formatTime(System.currentTimeMillis() - startTime));
 
 
         boardPanel.removeAll();
@@ -270,7 +334,29 @@ public class MatchCards {
             }
             gameReady = true;
             restartButton.setEnabled(true);
+            exitButton.setEnabled(true);
+            bottomGamePanel.revalidate();
+            bottomGamePanel.repaint();
+            frame.revalidate();
+            frame.repaint();
         }
+    }
+
+    int calculateLevelBonus() {
+        if (retries == 0) {
+            return 30;
+        } else if (retries >= 1 && retries <= 3) {
+            return 15;
+        } else {
+            return 0;
+        }
+    }
+
+    private String formatTime(long milliseconds) {
+        long seconds = milliseconds / 1000;
+        long minutes = seconds / 60;
+        seconds = seconds % 60;
+        return String.format("%02d:%02d", minutes, seconds);
     }
 
     Timer showAllTimer = new Timer(3000, new ActionListener() {
@@ -301,6 +387,8 @@ public class MatchCards {
 
                     int index1 = board.indexOf(card1Selected);
                     if (!cardSet.get(index1).cardName.equals(cardSet.get(index2).cardName)) {
+                        score -= 10;
+                        scoreLabel.setText("Score: " + Integer.toString(score));
                         lives--;
                         livesLabel.setText("Lives: " + Integer.toString(lives));
                         if (lives == 0) {
@@ -311,13 +399,16 @@ public class MatchCards {
                             card2Selected = null;
                             gameReady = false;
                             restartButton.setEnabled(false);
-                            
+                            exitButton.setEnabled(false);
+
                             setupNewLevel();
                             hideCardTimer.start();
                         } else {
                             hideCardTimer.start();
                         }
                     } else {
+                        score += 10;
+                        scoreLabel.setText("Score: " + Integer.toString(score));
                         card1Selected = null;
                         card2Selected = null;
                         checkIfLevelCompleted();
@@ -336,16 +427,52 @@ public class MatchCards {
             }
         }
 
+        int levelBonus = calculateLevelBonus();
+        score += levelBonus;
+
         if (level < maxLevel) {
             JOptionPane.showMessageDialog(frame, "Level " + level + " completed!\nStarting Level " + (level + 1));
             level++;         
             lives = 5;       
-            retries = 0;     
+            retries = 0;
+            scoreLabel.setText("Score: " + Integer.toString(score));
             setupNewLevel(); 
         } else {
-            JOptionPane.showMessageDialog(frame, "Congratulations! You have beaten every levels!"); 
-            frame.dispose(); 
-            //[ADD] implement an option to restart the game frome level 1 or return to the main menu 
+            long endTime = System.currentTimeMillis();
+            long elaspedTime = endTime - startTime;
+            String formattedTime = formatTime(elaspedTime);
+             Object[] options = {"Main Menu", "Restart"};
+            int choice = JOptionPane.showOptionDialog(frame,
+                    "Congratulations! You have beaten every level!\nLevel Bonus: " + levelBonus +
+                    "\nTotal Score: " + score + "\nTime: " + formattedTime,
+                    "Game Completed",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.INFORMATION_MESSAGE,
+                    null,
+                    options,
+                    options[0]);
+            
+            if (choice == 0) { // Main Menu
+                System.out.println("Attempting to open MainMenu from Level 3 completion");
+                try {
+                    clockTimer.stop();
+                    frame.dispose();
+                    SwingUtilities.invokeLater(MainMenu::new);
+                } catch (Exception ex) {
+                    System.err.println("Error opening MainMenu: " + ex.getMessage());
+                    ex.printStackTrace();
+                }
+            } else if (choice == 1) { // Restart
+                // Reset thời gian và điểm
+                startTime = System.currentTimeMillis();
+                timeLabel.setText("Time: 00:00");
+                level = 1;
+                lives = 5;
+                retries = 0;
+                score = 0;
+                scoreLabel.setText("Score: " + Integer.toString(score));
+                setupNewLevel();
+            }
         }
     }
 
