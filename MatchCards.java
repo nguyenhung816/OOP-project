@@ -1,29 +1,10 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import javax.swing.*;
-import javax.swing.border.Border;
-
 
 public class MatchCards {
-    
-    
-    class Card {
-        String cardName;
-        ImageIcon cardImageIcon;
-
-        Card(String cardName, ImageIcon cardImageIcon) {
-            this.cardName = cardName;
-            this.cardImageIcon = cardImageIcon;
-        }
-
-        public String toString() {
-            return cardName;
-        }
-    }
-    
-
+    //VARIABLES
     String[] cardList = { //track cardNames
         
         "arbok",
@@ -53,11 +34,15 @@ public class MatchCards {
     int boardWidth = columns * cardWidth; //5*128 = 640px
     int boardHeight = rows * cardHeight; //4*90 = 360px
 
-    JFrame frame = new JFrame("Pokemon Match Cards");
+    JFrame frame = new JFrame("Match Cards");
     JLabel textLabel = new JLabel();
-    JPanel textPanel = new JPanel();
+    JPanel infoPanel = new JPanel();
     JPanel boardPanel = new JPanel();
     JPanel bottomGamePanel = new JPanel();
+    JPanel itemsPanel = new JPanel();
+    JButton showAllCardsBtn = new JButton();
+    JButton show2MatchCardsBtn = new JButton();
+    JButton extendLivesBtn = new JButton();
     JButton restartButton = new JButton();
     JButton exitButton = new JButton();
 
@@ -67,16 +52,9 @@ public class MatchCards {
     JLabel scoreLabel = new JLabel();
     JLabel timeLabel = new JLabel();
 
-    JPanel itemsPanel = new JPanel();
-    JButton showAllCardsBtn = new JButton();
-    JButton show2MatchCardsBtn = new JButton();
-    JButton extendLivesBtn = new JButton();
-
     int showAllCardsUses = 3;
     int show2MatchCardsUses = 2;
     int extendLivesUses = 1;
-
-
     int lives = 5;
     int retries = 0;
     int score = 0;
@@ -89,8 +67,8 @@ public class MatchCards {
     JButton card1Selected;
     JButton card2Selected;
     
+    //game starts here
     MatchCards() {
-        // frame.setVisible(true);
         startTime = System.currentTimeMillis();
         frame.setLayout(new BorderLayout());
         frame.setSize(boardWidth + 300, boardHeight + 200);
@@ -98,8 +76,8 @@ public class MatchCards {
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        textPanel.setPreferredSize(new Dimension(250, 80));
-        textPanel.setLayout(new GridLayout(5, 1));
+        infoPanel.setPreferredSize(new Dimension(250, 80));
+        infoPanel.setLayout(new GridLayout(5, 1));
 
         //Lives text
         livesLabel = new JLabel("Lives: " + Integer.toString(lives));
@@ -122,15 +100,15 @@ public class MatchCards {
         timeLabel.setFont(new Font("Arial", Font.PLAIN, 20));
         timeLabel.setHorizontalAlignment(JLabel.CENTER);
         
+        //add the info panel to the right
+        infoPanel.add(levelLabel);
+        infoPanel.add(livesLabel);
+        infoPanel.add(retriesLabel);
+        infoPanel.add(scoreLabel);
+        infoPanel.add(timeLabel);
 
-        textPanel.add(levelLabel);
-        textPanel.add(livesLabel);
-        textPanel.add(retriesLabel);
-        textPanel.add(scoreLabel);
-        textPanel.add(timeLabel);
-
-        frame.add(textPanel, BorderLayout.EAST);
-        textPanel.add(textLabel);
+        frame.add(infoPanel, BorderLayout.EAST);
+        infoPanel.add(textLabel);
 
         clockTimer = new Timer(1000, e -> {
             long elapsed = System.currentTimeMillis() - startTime;
@@ -138,6 +116,7 @@ public class MatchCards {
         });
         clockTimer.start();
 
+        //add the item panels to the left
         setupItemsPanel();
         frame.add(itemsPanel, BorderLayout.WEST);
 
@@ -175,6 +154,7 @@ public class MatchCards {
             setupNewLevel();
         });
 
+        //exit game / return to main menu button
         exitButton.setFont(new Font("Arial", Font.PLAIN, 16));
         exitButton.setText("Exit");
         exitButton.setPreferredSize(new Dimension(120, 30));
@@ -208,6 +188,7 @@ public class MatchCards {
             }
         });
 
+        //add the restart and exit button to the bottom of the screen
         bottomGamePanel.add(restartButton);
         bottomGamePanel.add(exitButton);
         frame.add(bottomGamePanel, BorderLayout.SOUTH);
@@ -547,8 +528,6 @@ public class MatchCards {
         }
 
         if (availableCards.size() >= 2) {
-          
-            String targetCardName = null;
             int firstCardIndex = -1, secondCardIndex = -1;
             
             for (int i = 0; i < availableCards.size() - 1; i++) {
@@ -597,7 +576,7 @@ public class MatchCards {
         }
 
         lives += 1;
-        for (Component comp : textPanel.getComponents()) {
+        for (Component comp : infoPanel.getComponents()) {
             if (comp instanceof JLabel && ((JLabel) comp).getText().startsWith("Lives:")) {
                 ((JLabel) comp).setText("Lives: " + Integer.toString(lives));
                 break;

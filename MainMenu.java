@@ -1,4 +1,3 @@
-import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -14,8 +13,6 @@ import java.io.IOException;
 public class MainMenu {
 
     private static Clip musicClip;
-    private static float musicVolume = 0.5f; // Default music volume (50%)
-    private static float soundVolume = 0.5f; 
     public static void playMusic(String filePath) {
         try {
             File musicFile = new File(filePath);
